@@ -1,0 +1,4 @@
+github.com/openfaas/faas-provider v0.19.1 h1:xH8lTWabfDZwzIvC0u1AO48ghD3BNw6Vo231DLqTeI0=
+github.com/openfaas/faas-provider v0.19.1/go.mod h1:Farrp+9Med8LeK3aoYpqplMP8f5ebTILbCSLg2LPLZk=
+github.com/openfaas/go-sdk v0.0.1 h1:oxJFfAwGzv/Rrju5/CfsYVld962PvR9VvCzB63JWjKs=
+github.com/openfaas/go-sdk v0.0.1/go.mod h1:s/hynJo/zyl2u82N9hleeMHHfDyZQExKCHU0WIe4RJs=
