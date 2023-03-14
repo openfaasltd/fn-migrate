@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/openfaas/faas-provider/auth"
 	"github.com/openfaas/faas-provider/types"
@@ -28,6 +29,11 @@ func main() {
 	flag.BoolVar(&dryRun, "dry-run", false, "Dry run")
 
 	flag.Parse()
+
+	expires := time.Date(2023, 04, 28, 0, 0, 0, 0, time.UTC)
+	if time.Now().After(expires) {
+		log.Fatal("This tool has expired, please contact OpenFaaS Ltd")
+	}
 
 	uSource, err := url.Parse(gatewaySource)
 	if err != nil {
@@ -65,7 +71,8 @@ func main() {
  `,
 			info.Provider.Orchestration, info.Provider.Provider, info.Provider.Version.Release, info.Provider.Version.SHA)
 	}
-	if info, err := targetSdk.GetInfo(); err != nil {
+
+	if targetInfo, err := targetSdk.GetInfo(); err != nil {
 		log.Fatal(err)
 	} else {
 		fmt.Printf(`Target:
@@ -74,13 +81,18 @@ func main() {
  - commit: %s
  
  `,
-			info.Provider.Orchestration, info.Provider.Provider, info.Provider.Version.Release, info.Provider.Version.SHA)
-		if strings.Contains(info.Provider.Provider, "ce") {
-			log.Fatal("Invalid target cluster")
+			targetInfo.Provider.Orchestration, targetInfo.Provider.Provider, targetInfo.Provider.Version.Release, targetInfo.Provider.Version.SHA)
+		if strings.Contains(targetInfo.Provider.Provider, "ce") {
+			log.Fatal("Invalid target cluster configuration: OpenFaaS CE detected.")
+		}
+
+		if !strings.Contains(targetInfo.Provider.Provider, "operator") {
+			log.Fatal("Target cluster must have operator mode enabled.")
 		}
 	}
 
 	fmt.Println()
+
 	if err := mirror(uSource, sourceSdk, uTarget, targetSdk, dryRun); err != nil {
 		log.Fatal(err)
 	}
