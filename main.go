@@ -30,6 +30,8 @@ func main() {
 
 	flag.Parse()
 
+	fmt.Println("fn-migrate. Copyright OpenFaaS Ltd.")
+
 	expires := time.Date(2023, 04, 28, 0, 0, 0, 0, time.UTC)
 	if time.Now().After(expires) {
 		log.Fatal("This tool has expired, please contact OpenFaaS Ltd")
